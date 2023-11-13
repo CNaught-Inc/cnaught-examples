@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.1",
-    "@cnaught/cnaught-node-sdk": "^2.0.0-rc5",
+    "@cnaught/cnaught-node-sdk": "^2.0.0",
     "@ctrl/tinycolor": "^4.0.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
