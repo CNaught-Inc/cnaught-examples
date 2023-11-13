@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN     "amount_kg" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "origin_city" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "origin_latitude" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "origin_longitude" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "origin_state" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "travel_method" TEXT NOT NULL DEFAULT '';
