@@ -88,7 +88,7 @@ Go to [http://localhost:3000/impact](http://localhost:3000/impact) to view the i
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcnaught-inc%2Fcnaught-examples%2Ftree%2Fmain%2Fevent-offsetting&project-name=event-offsetting&repository-name=event-offsetting&env=EVENT_LOCATION,NEXT_PUBLIC_EVENT_NAME,NEXT_PUBLIC_EVENT_DESTINATION_AIRPORTS,CNAUGHT_API_KEY,CNAUGHT_API_URL,NEXT_PUBLIC_GOOGLE_API_KEY,EMAIL_SMTP_HOST,EMAIL_SMTP_POST,EMAIL_SMTP_USER,EMAIL_SMTP_PASSWORD,EMAIL_FROM_ADDRESS,EMAIL_FROM_NAME)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcnaught-inc%2Fcnaught-examples%2Ftree%2Fmain%2Fevent-offsetting&project-name=event-offsetting&repository-name=event-offsetting&env=EVENT_LOCATION,NEXT_PUBLIC_EVENT_NAME,NEXT_PUBLIC_EVENT_DESTINATION_AIRPORTS,CNAUGHT_API_KEY,CNAUGHT_API_URL,NEXT_PUBLIC_GOOGLE_API_KEY)
 
 Before deploying, you will need to set up your production database. The easiest option is to use Vercel Storage; you could also use [Neon](https://neon.tech) directly.
 The app uses the Neon serverless driver to connect to the database, so other DB providers would not work without code changes.
