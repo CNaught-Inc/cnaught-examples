@@ -82,12 +82,12 @@ export const EmissionsCalculator = ({
                         label={`Origin${transportMode === 'flight' ? ' airport' : ''}`}
                         autocompletionRequest={transportMode === 'flight' ? { types: ['airport'] } : undefined}
                         showMainTextOnly={transportMode === 'flight'}
-                        placeholder={transportMode === 'driving' ? 'Start typing to search...' : undefined}
+                        placeholder="Start typing to search..."
                     />
                     {transportMode === 'flight' && (
                         <SelectInput<CalculatorSchema>
                             name="destinationAddress"
-                            label={`Destination${transportMode === 'flight' ? ' airport' : ''}`}
+                            label="Destination airport"
                             options={destAirportOpts}
                             useBasicStyles
                         />
