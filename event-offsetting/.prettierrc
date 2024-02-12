@@ -4,5 +4,17 @@
     "importOrder": ["^@(.*)$", "<THIRD_PARTY_MODULES>", "^[./]"],
     "importOrderSeparation": true,
     "trailingComma": "none",
-    "plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-prisma"]
+    "plugins": [
+        "@trivago/prettier-plugin-sort-imports",
+        "prettier-plugin-prisma"
+    ],
+    "overrides": [
+        {
+            "files": ["*.yml", "*.yaml", "*.md"],
+            "options": {
+                "tabWidth": 2,
+                "singleQuote": false
+            }
+        }
+    ]
 }

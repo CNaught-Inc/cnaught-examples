@@ -1,14 +1,14 @@
-# Event Travel Offsetting App using Next.js, CNaught SDK, Google Maps API and Leaflet 
+# Event Travel Offsetting App using Next.js, CNaught SDK, Google Maps API and Leaflet
 
 This is an example app to illustrate how to use the CNaught API to integrate carbon credits into a
 web application. The app allows travelers to an event such as a conference to offset their travel to the event.
 
 This demonstrates the following capabilities:
 
-* Using the API to purchase carbon credits
-* Using the API to retrieve and display total climate compact
-* Using webhooks from the API to be notified when carbon credits are fulfilled, and retrieving and emailing 
-confirmation emails with certificates for the credits
+- Using the API to purchase carbon credits
+- Using the API to retrieve and display total climate compact
+- Using webhooks from the API to be notified when carbon credits are fulfilled, and retrieving and emailing
+  confirmation emails with certificates for the credits
 
 ## Running the app locally
 
@@ -29,7 +29,38 @@ use any other data store. You could either run the DB locally or use a provider 
 #### Local database
 
 The repository includes a [docker-compose.yml](docker-compose.yml) for running a local Postgres DB and a WebSocket
-proxy (needed to access the DB from Next.js edge environment). Simply run `docker compose up` and it should be ready to go.
+proxy (needed to access the DB from Next.js edge environment and locally). Simply run `docker compose up` and it should be ready to go.
+
+If you want to run the postgres instance on a port other than `5432` because the port is in use (e.g. there is already another postgres instance running on that port), you will need modify the exposed port.
+
+In `docker-compose.yml`
+
+```yaml
+# Change exposed port to 5430
+db:
+  # Other config...
+  ports:
+    - "5430:5432"
+```
+
+Similarly, if you need run the websocket proxy on a different port (e.g. default configured port 5443 already in use), you will need to change its exposed port and update the neon config object accordingly.
+
+In `docker-compose.yml`
+
+```yaml
+# Change exposed port to 5443
+pg_proxy:
+  # Other config...
+  ports:
+    - "5443:80"
+```
+
+Then in `db.ts`
+
+```typescript
+// Change the port on this line to match your new websocket proxy port
+neonConfig.wsProxy = (host) => `${host}:5443/v1`;
+```
 
 #### Cloud-based database
 
@@ -50,14 +81,14 @@ If using a different tool, follow its instructions and note its forwarding URL.
 Copy `.env.local.sample` to `.env.local` and fill out the needed values:
 
 | Variable                                 | Required? | Description                                                                                                                                                                                                                              |
-|------------------------------------------|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `EVENT_LOCATION`                         | yes       | The location for your event. Follow the JSON format from `.env.local.sample`                                                                                                                                                             |
 | `NEXT_PUBLIC_EVENT_NAME`                 | yes       | The name of your event                                                                                                                                                                                                                   |
 | `NEXT_PUBLIC_EVENT_DESTINATION_AIRPORTS` | yes       | A list of airports that people travelling to your event could fly into. JSON format from `.env.local.sample`. Any number of airports can be entered.                                                                                     |
 | `CNAUGHT_API_KEY`                        | yes       | Your CNaught API key (if you don't have one yet, [Sign Up](https://app.cnaught.com/api/auth/signup) now)                                                                                                                                 |
 | `CNAUGHT_API_URL`                        | yes       | The base URL for the CNaught API requests. You should generally leave this as `https://api.cnaught.com` needing to use a non-production version of the API                                                                               |
 | `CNAUGHT_API_WEBHOOK_URL`                | yes       | The URL for the CNaught API to send webhooks to the app. This should be the Forwarding URL from setting up the webhook proxy                                                                                                             |
-| `NEXT_PUBLIC_GOOGLE_API_KEY`             | yes       | Google Maps API key. The free tier is sufficient.                                                                                                                                                                                        | 
+| `NEXT_PUBLIC_GOOGLE_API_KEY`             | yes       | Google Maps API key. The free tier is sufficient.                                                                                                                                                                                        |
 | `NEXT_PUBLIC_ESRI_API_KEY`               | no        | Optional [ESRI](https://developers.arcgis.com) API key, for displaying vector-based map on the impact page. If not present, will use raster tiles.                                                                                       |
 | `POSTGRES_URL`                           | yes       | URL for your Postgres database                                                                                                                                                                                                           |
 | `POSTGRES_USE_WS_PROXY`                  | no        | Indicator controlling whether to use a websocket proxy for connecting to the database. Set to 1 if using a local database.                                                                                                               |
@@ -69,7 +100,7 @@ Copy `.env.local.sample` to `.env.local` and fill out the needed values:
 Once the environment variables are set up, run DB migrations to create the database.
 
 ```
-npx prisma migrate dev
+bunx prisma migrate dev
 ```
 
 ### Run the local server
@@ -93,14 +124,14 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Before deploying, you will need to set up your production database. The easiest option is to use Vercel Storage; you could also use [Neon](https://neon.tech) directly.
 The app uses the Neon serverless driver to connect to the database, so other DB providers would not work without code changes.
 
-Once the project is imported into Vercel, you will need to configure the same environment variables listed in the guide 
+Once the project is imported into Vercel, you will need to configure the same environment variables listed in the guide
 for running the app locally in Vercel's Environment Variables settings page, with the following adjustments:
 
-| Variable                                 | Required? | Description                                                                                                                                                                                                                                           |
-|------------------------------------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `CNAUGHT_API_WEBHOOK_URL`                | no        | The URL for the CNaught API to send webhooks to the app. If not set, will use VERCEL_URL which is automatically set to the auto-generated Vercel deployment url. If you configure a custom domain for your Vercel deployment, then set this to match. |
-| `POSTGRES_URL`                           | yes       | URL for your Postgres database. If using Vercel Postgres, after connecting it to your project this will be set automatically.                                                                                                                         |
-| `POSTGRES_USE_WS_PROXY`                  | no        | Don't set this as long as you use Vercel Storage or Neon as your database provider.                                                                                                                                                                   |
+| Variable                  | Required? | Description                                                                                                                                                                                                                                           |
+| ------------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CNAUGHT_API_WEBHOOK_URL` | no        | The URL for the CNaught API to send webhooks to the app. If not set, will use VERCEL_URL which is automatically set to the auto-generated Vercel deployment url. If you configure a custom domain for your Vercel deployment, then set this to match. |
+| `POSTGRES_URL`            | yes       | URL for your Postgres database. If using Vercel Postgres, after connecting it to your project this will be set automatically.                                                                                                                         |
+| `POSTGRES_USE_WS_PROXY`   | no        | Don't set this as long as you use Vercel Storage or Neon as your database provider.                                                                                                                                                                   |
 
-You will also need to set deployment protection to "preview only" or turn it off, otherwise the CNaught API will be unable to 
+You will also need to set deployment protection to "preview only" or turn it off, otherwise the CNaught API will be unable to
 send webhooks to the app.

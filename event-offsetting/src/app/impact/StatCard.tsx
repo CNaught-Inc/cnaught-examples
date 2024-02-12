@@ -9,13 +9,27 @@ interface StatCardProps {
     description: string;
 }
 
-const statFormatter = new Intl.NumberFormat('us-US', { maximumFractionDigits: 1 });
+const statFormatter = new Intl.NumberFormat('us-US', {
+    maximumFractionDigits: 1
+});
 
 export const StatCard = ({ img, value, description }: StatCardProps) => {
     return (
-        <Card w="full" rounded="xl" boxShadow="lg" p={0} overflow="hidden">
+        <Card
+            w="full"
+            rounded="3xl"
+            boxShadow="lg"
+            p={0}
+            overflow="hidden"
+            bg="brand.cream"
+        >
             <Box w="full" h="196px" overflow="hidden" position="relative">
-                <Image src={img} alt={description} fill={true} style={{ objectFit: "cover"}} />
+                <Image
+                    src={img}
+                    alt={description}
+                    fill={true}
+                    style={{ objectFit: 'cover' }}
+                />
             </Box>
             <Box pt={7} pb={7}>
                 <Text fontSize="5xl" textAlign="center">

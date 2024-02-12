@@ -47,7 +47,7 @@ export const ConfirmationEmail = ({
             <Body style={main}>
                 <Container style={{ margin: '0 auto', width: '600px' }}>
                     <Img
-                        src={`https://app.cnaught.com/assets/cnaught_logo_full.svg`}
+                        src="https://app.cnaught.com/assets/cnaught_logo_full.png"
                         height="48px"
                         alt="CNaught"
                     />

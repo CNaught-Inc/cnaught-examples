@@ -49,7 +49,7 @@ export default async function Index() {
     );
 }
 
-export const runtime = 'edge';
+// export const runtime = 'edge';
 
 export async function generateMetadata(): Promise<Metadata> {
     const impactData = await cnaughtApiClient.getImpactData({

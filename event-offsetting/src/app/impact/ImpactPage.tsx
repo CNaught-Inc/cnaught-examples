@@ -1,5 +1,6 @@
 'use client';
 
+import { cnaughtTheme } from '@/calculator';
 import {
     Box,
     Center,
@@ -15,7 +16,6 @@ import {
     VStack
 } from '@chakra-ui/react';
 import { ImpactData } from '@cnaught/cnaught-node-sdk';
-import { cnaughtTheme } from '@/calculator';
 
 import _ from 'lodash';
 import React from 'react';
@@ -51,7 +51,8 @@ export const ImpactPage = ({ data: initialData }: ImpactPageProps) => {
     if (!impactPageDataRes.data) {
         if (impactPageDataRes.isLoading) return <div>Loading</div>;
 
-        if (impactPageDataRes.error) console.log('error loading impact data', impactPageDataRes.error);
+        if (impactPageDataRes.error)
+            console.log('error loading impact data', impactPageDataRes.error);
 
         return <div>Could not load data</div>;
     }
@@ -77,63 +78,83 @@ export const ImpactPage = ({ data: initialData }: ImpactPageProps) => {
                     bgRepeat={{ base: 'no-repeat, no-repeat', lg: 'no-repeat' }}
                 >
                     <Center w="full">
-                        <VStack pt={4} pb={10} px={{ base: 3, md: 12 }} align="flex-start" w="full" maxW="7xl">
+                        <VStack
+                            py={12}
+                            px={{ base: 3, md: 12 }}
+                            align="flex-start"
+                            w="full"
+                            maxW="7xl"
+                        >
                             <Stack
                                 direction={{ base: 'column', lg: 'row' }}
                                 align={{ base: 'center', lg: 'stretch' }}
-                                justify={{ base: 'flex-start', lg: 'space-around' }}
+                                justify={{
+                                    base: 'flex-start',
+                                    lg: 'space-around'
+                                }}
                                 w="full"
                                 spacing={{ base: 6, lg: 2 }}
                             >
-                                <Box>
+                                <HStack>
                                     <Heading
-                                        mt={3}
                                         fontWeight="medium"
-                                        fontSize={{ base: '4xl', sm: '6xl', md: '7xl' }}
-                                        textAlign={{ base: 'center', md: 'left' }}
+                                        fontSize={{
+                                            base: '4xl',
+                                            sm: '6xl',
+                                            md: '7xl'
+                                        }}
+                                        textAlign={{
+                                            base: 'center',
+                                            lg: 'left'
+                                        }}
                                     >
                                         <Text>Offsetting the impact</Text>
                                         <Text>of travel to {eventName}</Text>
                                     </Heading>
-                                </Box>
-                                <Box mt={5}>
-                                    <VStack
-                                        rounded="xl"
-                                        boxShadow="lg"
-                                        bg="brand.cream"
-                                        px={{ base: 5, sm: 10 }}
-                                        py={6}
-                                        divider={<StackDivider borderColor="text.gray" />}
-                                        spacing={4}
-                                        h="full"
-                                        justify="center"
+                                </HStack>
+                                <VStack
+                                    rounded="3xl"
+                                    boxShadow="lg"
+                                    bg="brand.cream"
+                                    px={{ base: 5, sm: 10 }}
+                                    py={6}
+                                    divider={
+                                        <StackDivider borderColor="text.gray" />
+                                    }
+                                    spacing={4}
+                                    h="full"
+                                    justify="center"
+                                >
+                                    <Text
+                                        fontSize={{ base: 'md', sm: 'lg' }}
+                                        fontWeight="light"
+                                        textAlign="center"
                                     >
-                                        <Text fontSize={{ base: 'md', sm: 'lg' }} fontWeight="light" textAlign="center">
-                                            So far{' '}
-                                            <Text as="span" fontWeight="bold">
-                                                {userLocations.length}
-                                            </Text>{' '}
-                                            {eventName} attendees have offset
-                                        </Text>
-                                        <Box
-                                            fontSize="7xl"
-                                            fontWeight="light"
-                                            lineHeight="normal"
-                                            w="full"
-                                            textAlign="center"
-                                        >
-                                            {co2Components.amount}
-                                        </Box>
-                                        <Box
-                                            fontSize={{ base: 'md', sm: 'lg' }}
-                                            fontWeight="light"
-                                            w="full"
-                                            textAlign="center"
-                                        >
-                                            {co2Components.unit} of CO<sub>2</sub>e
-                                        </Box>
-                                    </VStack>
-                                </Box>
+                                        So far{' '}
+                                        <Text as="span" fontWeight="bold">
+                                            {userLocations.length}
+                                        </Text>{' '}
+                                        {eventName} attendees have offset
+                                    </Text>
+                                    <Box
+                                        fontSize="7xl"
+                                        fontWeight="light"
+                                        lineHeight="normal"
+                                        w="full"
+                                        textAlign="center"
+                                    >
+                                        {co2Components.amount}
+                                    </Box>
+                                    <Box
+                                        fontSize={{ base: 'md', sm: 'lg' }}
+                                        fontWeight="light"
+                                        w="full"
+                                        textAlign="center"
+                                    >
+                                        {co2Components.unit} of CO
+                                        <sub>2</sub>e
+                                    </Box>
+                                </VStack>
                             </Stack>
                         </VStack>
                     </Center>
@@ -147,13 +168,23 @@ export const ImpactPage = ({ data: initialData }: ImpactPageProps) => {
                     </VStack>
                 </Center>
                 <Center bg="brand.green">
-                    <VStack spacing={8} py={10} px={{ base: 5, sm: 8 }} w="full" maxW="7xl">
+                    <VStack
+                        spacing={8}
+                        py={10}
+                        px={{ base: 5, sm: 8 }}
+                        w="full"
+                        maxW="7xl"
+                    >
                         <Heading fontSize="4xl">Recent travelers</Heading>
-                        <Stack w="full" direction={{ base: 'column', lg: 'row' }} spacing={5}>
+                        <Stack
+                            w="full"
+                            direction={{ base: 'column', lg: 'row' }}
+                            spacing={5}
+                        >
                             {recentUsers.map((u) => (
                                 <Box
                                     key={u.id}
-                                    rounded="xl"
+                                    rounded="2xl"
                                     boxShadow="lg"
                                     bg="brand.cream"
                                     px={{ base: 5, sm: 10 }}
@@ -162,10 +193,15 @@ export const ImpactPage = ({ data: initialData }: ImpactPageProps) => {
                                     minW={{ base: 0, md: 'xl', lg: 0 }}
                                 >
                                     <Text fontSize="md" fontWeight="bold">
-                                        {u.first_name} {u.last_name.substring(0, 1).toUpperCase()}.
+                                        {u.first_name}{' '}
+                                        {u.last_name
+                                            .substring(0, 1)
+                                            .toUpperCase()}
+                                        .
                                     </Text>{' '}
                                     <Text fontSize="sm">
-                                        {_.round(u.amount_kg, 0)} kg for {u.travel_method} from {u.origin_city},{' '}
+                                        {_.round(u.amount_kg, 0)} kg for{' '}
+                                        {u.travel_method} from {u.origin_city},{' '}
                                         {u.origin_state}
                                     </Text>
                                 </Box>
@@ -173,17 +209,33 @@ export const ImpactPage = ({ data: initialData }: ImpactPageProps) => {
                         </Stack>
                     </VStack>
                 </Center>
-                <Center bg="white" w="full" pt={10} pb={5} px={{ base: 5, sm: 8 }}>
+                <Center
+                    bg="brand.cream"
+                    w="full"
+                    py={10}
+                    px={{ base: 5, sm: 8 }}
+                >
                     <VStack w="full" maxW="5xl" spacing={6}>
-                        <Heading fontSize="4xl">Where {eventName} attendees are coming from</Heading>
-                        <TravellerDistributionCard userLocations={userLocations} />
+                        <Heading fontSize="4xl">
+                            Where {eventName} attendees are coming from
+                        </Heading>
+                        <TravellerDistributionCard
+                            userLocations={userLocations}
+                        />
                     </VStack>
                 </Center>
                 <Center bg="brand.cream" w="full" px={8} py={4}>
                     <HStack w="full" justify="flex-end" maxW="7xl" spacing={4}>
                         <LinkBox w="30px">
-                            <Image src="/cnaught_logo_mark.svg" alt="cnaught-logo" style={{ objectFit: "cover" }}/>
-                            <LinkOverlay href="https://www.cnaught.com" isExternal />
+                            <Image
+                                src="/cnaught_logo_mark.svg"
+                                alt="cnaught-logo"
+                                style={{ objectFit: 'cover' }}
+                            />
+                            <LinkOverlay
+                                href="https://www.cnaught.com"
+                                isExternal
+                            />
                         </LinkBox>
                         <Text fontWeight="light">Powered by CNaught</Text>
                     </HStack>

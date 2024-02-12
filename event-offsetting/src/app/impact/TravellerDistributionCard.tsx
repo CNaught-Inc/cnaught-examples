@@ -1,4 +1,12 @@
-import { AspectRatio, Card, HStack, Icon, Text, useBreakpointValue, VStack } from '@chakra-ui/react';
+import {
+    AspectRatio,
+    Card,
+    HStack,
+    Icon,
+    Text,
+    useBreakpointValue,
+    VStack
+} from '@chakra-ui/react';
 
 import dynamic from 'next/dynamic';
 import React from 'react';
@@ -16,18 +24,34 @@ const Popup = dynamic(async () => (await import('react-leaflet')).Popup, {
     ssr: false
 });
 
-export function TravellerDistributionCard({ userLocations }: { userLocations: UserLocation[] }) {
+export function TravellerDistributionCard({
+    userLocations
+}: {
+    userLocations: UserLocation[];
+}) {
     const zoomLevel = useBreakpointValue({
         base: 0,
         sm: 1,
         md: 2
     });
     return (
-        <Card w="full">
+        <Card w="full" rounded="3xl" boxShadow="lg" overflow="hidden">
             <AspectRatio ratio={16 / 9}>
-                <Map width="100%" zoom={zoomLevel} center={[22, -10]} minZoom={zoomLevel} scrollWheelZoom={false}>
+                <Map
+                    width="100%"
+                    zoom={zoomLevel}
+                    center={[22, -10]}
+                    minZoom={zoomLevel}
+                    scrollWheelZoom={false}
+                >
                     {userLocations.map((user) => (
-                        <Marker key={`${user.id}`} position={[user.origin_latitude, user.origin_longitude]}>
+                        <Marker
+                            key={`${user.id}`}
+                            position={[
+                                user.origin_latitude,
+                                user.origin_longitude
+                            ]}
+                        >
                             <Popup>
                                 <VStack align="flex-start">
                                     <Text as="span" fontWeight="semibold">
@@ -36,7 +60,8 @@ export function TravellerDistributionCard({ userLocations }: { userLocations: Us
                                     <HStack color="gray.500">
                                         <Icon as={MdLocationPin} />
                                         <Text>
-                                            {user.origin_city}, {user.origin_state}
+                                            {user.origin_city},{' '}
+                                            {user.origin_state}
                                         </Text>
                                     </HStack>
                                 </VStack>

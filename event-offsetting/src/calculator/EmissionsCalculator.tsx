@@ -1,7 +1,7 @@
-import { VStack } from '@chakra-ui/react';
+import { FormLabel, Text, VStack } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
 import wretch from 'wretch';
@@ -40,19 +40,43 @@ export const EmissionsCalculator = ({
         resolver: yupResolver(calculatorSchema)
     });
 
-    const calculateEmissions = useDebouncedCallback(async (originPlaceId: string, destinationPlaceId?: string) => {
-        const searchParams = new URLSearchParams({ originPlaceId, destinationPlaceId: destinationPlaceId ?? '' });
-        const resData = await wretch(`${calculateEmissionsUrl}?${searchParams}`).get().json<{ emissionsKg: number }>();
+    const calculateEmissions = useDebouncedCallback(
+        async (originPlaceId: string, destinationPlaceId?: string) => {
+            const searchParams = new URLSearchParams({
+                originPlaceId,
+                destinationPlaceId: destinationPlaceId ?? ''
+            });
+            const resData = await wretch(
+                `${calculateEmissionsUrl}?${searchParams}`
+            )
+                .get()
+                .json<{ emissionsKg: number }>();
 
-        onCalculateEmissions(originPlaceId, transportMode, resData.emissionsKg);
-    }, 300);
+            onCalculateEmissions(
+                originPlaceId,
+                transportMode,
+                resData.emissionsKg
+            );
+        },
+        300
+    );
+
+    const destAirportOpts = useMemo(
+        () =>
+            destinationAirportOptions.map(({ name, place_id }) => ({
+                label: name,
+                value: { place_id }
+            })),
+        [destinationAirportOptions]
+    );
 
     useEffect(() => {
         calculatorForm.reset({
             originAddress: null,
-            destinationAddress: null
+            destinationAddress:
+                destAirportOpts.length == 1 ? destAirportOpts[0] : null
         });
-    }, [calculatorForm, transportMode]);
+    }, [calculatorForm, transportMode, destAirportOpts]);
 
     const origin = calculatorForm.watch('originAddress')?.value;
     const destination = calculatorForm.watch('destinationAddress')?.value;
@@ -66,12 +90,14 @@ export const EmissionsCalculator = ({
 
         onCalculatingEmissions();
         calculateEmissions(origin.place_id, destination?.place_id);
-    }, [origin, destination, calculateEmissions, onCalculatingEmissions, transportMode, onCalculateEmissions]);
-
-    const destAirportOpts = destinationAirportOptions.map(({ name, place_id }) => ({
-        label: name,
-        value: { place_id }
-    }));
+    }, [
+        origin,
+        destination,
+        calculateEmissions,
+        onCalculatingEmissions,
+        transportMode,
+        onCalculateEmissions
+    ]);
 
     return (
         <FormProvider {...calculatorForm}>
@@ -79,18 +105,37 @@ export const EmissionsCalculator = ({
                 <VStack w="full" spacing={5}>
                     <GooglePlacesAutoCompleteInput<CalculatorSchema>
                         name="originAddress"
-                        label={`Origin${transportMode === 'flight' ? ' airport' : ''}`}
-                        autocompletionRequest={transportMode === 'flight' ? { types: ['airport'] } : undefined}
+                        label={
+                            transportMode === 'flight'
+                                ? 'Origin airport'
+                                : 'Origin'
+                        }
+                        autocompletionRequest={
+                            transportMode === 'flight'
+                                ? { types: ['airport'] }
+                                : undefined
+                        }
                         showMainTextOnly={transportMode === 'flight'}
                         placeholder="Start typing to search..."
                     />
                     {transportMode === 'flight' && (
-                        <SelectInput<CalculatorSchema>
-                            name="destinationAddress"
-                            label="Destination airport"
-                            options={destAirportOpts}
-                            useBasicStyles
-                        />
+                        <>
+                            {destAirportOpts.length > 1 ? (
+                                <SelectInput<CalculatorSchema>
+                                    name="destinationAddress"
+                                    label="Destination airport"
+                                    options={destAirportOpts}
+                                    useBasicStyles
+                                />
+                            ) : (
+                                <VStack align="stretch" w="full" spacing={0}>
+                                    <FormLabel>Destination airport</FormLabel>
+                                    <Text fontWeight="light">
+                                        {destAirportOpts[0].label}
+                                    </Text>
+                                </VStack>
+                            )}
+                        </>
                     )}
                 </VStack>
             </form>
@@ -101,7 +146,9 @@ export const EmissionsCalculator = ({
 const googlePlaceSchema = yup.object().shape({
     description: yup.string(),
     place_id: yup.string().required(),
-    structured_formatting: yup.object().shape({ main_text: yup.string().required() })
+    structured_formatting: yup
+        .object()
+        .shape({ main_text: yup.string().required() })
 });
 
 const addressOptionSchema = yup

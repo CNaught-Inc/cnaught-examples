@@ -13,6 +13,7 @@ import {
     Center,
     ChakraProvider,
     Collapse,
+    Divider,
     HStack,
     Heading,
     Link,
@@ -33,9 +34,15 @@ import wretch, { WretchError } from 'wretch';
 import * as yup from 'yup';
 
 import { OffsetStatus } from './OffsetStatus';
+import { formatCO2AsString } from './impact/formatUtils';
 
 const formId = 'user-info-form';
 const eventName = process.env.NEXT_PUBLIC_EVENT_NAME as string;
+const heroText = process.env.NEXT_PUBLIC_HERO_TEXT as string;
+const heroSubText = process.env.NEXT_PUBLIC_HERO_SUB_TEXt as string;
+const destinationAirports = JSON.parse(
+    process.env.NEXT_PUBLIC_EVENT_DESTINATION_AIRPORTS as string
+);
 
 export default function Index() {
     const router = useRouter();
@@ -173,12 +180,19 @@ export default function Index() {
                                             textAlign="left"
                                             w="full"
                                         >
-                                            Offset your travel to {eventName}!
+                                            {heroText ??
+                                                `Offset your travel to ${eventName}!`}
                                         </Heading>
                                         <Text fontWeight="light">
-                                            Answer a few simple questions, and
-                                            we&rsquo;ll retire carbon credits to
-                                            offset your travel here, at no cost.
+                                            {heroSubText ?? (
+                                                <>
+                                                    Answer a few simple
+                                                    questions to support a
+                                                    carbon credit portfolio that
+                                                    maximizes impact and
+                                                    mitigates risk.
+                                                </>
+                                            )}
                                         </Text>
                                         <VStack w="full" spacing={4}>
                                             <HStack
@@ -252,10 +266,9 @@ export default function Index() {
                                         spacing={5}
                                     >
                                         <EmissionsCalculator
-                                            destinationAirportOptions={JSON.parse(
-                                                process.env
-                                                    .NEXT_PUBLIC_EVENT_DESTINATION_AIRPORTS as string
-                                            )}
+                                            destinationAirportOptions={
+                                                destinationAirports
+                                            }
                                             transportMode={transportMode}
                                             calculateEmissionsUrl={`/api/calculate/${transportMode}`}
                                             onCalculatingEmissions={
@@ -265,13 +278,39 @@ export default function Index() {
                                                 onCalculateEmissions
                                             }
                                         />
-                                        {isCalculatingEmissions && <Spinner />}
+                                        {isCalculatingEmissions && (
+                                            <>
+                                                {transportMode === 'flight' && (
+                                                    <Divider orientation="horizontal" />
+                                                )}
+                                                <HStack>
+                                                    <Spinner />
+                                                    <Text>
+                                                        Calculating emissions...
+                                                    </Text>
+                                                </HStack>
+                                            </>
+                                        )}
                                         {!isCalculatingEmissions && co2eKg && (
-                                            <Text fontWeight="light">
-                                                Your round-trip will emit
-                                                approximately {co2eKg} kilograms
-                                                of CO&#8322;e.
-                                            </Text>
+                                            <>
+                                                {transportMode === 'flight' && (
+                                                    <Divider orientation="horizontal" />
+                                                )}
+                                                <Box>
+                                                    <Text>
+                                                        Your round-trip will
+                                                        emit approximately{' '}
+                                                        {formatCO2AsString(
+                                                            co2eKg,
+                                                            {
+                                                                showTonnesIfAtLeastKg: 1000,
+                                                                maximumFractionDigits: 3
+                                                            }
+                                                        )}{' '}
+                                                        of CO&#8322;
+                                                    </Text>
+                                                </Box>
+                                            </>
                                         )}
                                         {form.formState.errors.co2eKg?.type ===
                                             'optionality' && (
@@ -290,7 +329,7 @@ export default function Index() {
                                     <Spacer />
                                     <VStack
                                         w="full"
-                                        align="flex-start"
+                                        align="flex-end"
                                         spacing={4}
                                     >
                                         <Button
